@@ -13,4 +13,11 @@ class Project extends Model
         'description',
         'image_url',
     ];
+    // protected $attributes = [
+    //     'title' => 'Default Title',
+    //     'description' => 'Default Description',
+    //     'image_url' => 'Default image_url'
+
+    // ];
+
 }
