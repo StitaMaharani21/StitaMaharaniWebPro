@@ -12,6 +12,7 @@
                         <table style="width: 100%; margin-top: 10px">
                             <tr>
                                 <th>No</th>
+                                <th>User Name</th>
                                 <th>Project Title</th>
                                 <th>Project Description</th>
                                 <th>Image Project</th>
@@ -19,10 +20,14 @@
                             @foreach ($project as $index => $item)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
+                                    <td>{{ $item->user->name }}</td>
                                     <td>{{ $item->title }}</td>
                                     <td>{{ $item->description }}</td>
                                     <td><img src="{{ asset($item->image_url) }}" style="width: 200px; height: 100px"></td>
                                     <td>
+                                        <a href="{{ route('project.detail', $item->id) }}"
+                                            class="btn btn-primary btn-sm">Detail</a>
+
                                         <a href="{{ route('project.edit', $item->id) }}"
                                             class="btn btn-warning btn-sm">Edit</a>
 

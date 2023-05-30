@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\DetailProject;
+use Illuminate\Support\Facades\Auth;
 use Image;
 use Validator;
 use Illuminate\Http\Request;
@@ -71,6 +74,7 @@ class HomeController extends Controller
             $project = Project::where('title', $request->title)->first();
             if ($project == null) {
                 $project = new Project;
+                $project->user_id = Auth::user()->id;
                 $project->title = $request->title;
                 $project->description = $request->description;
                 $project->image_url = '/storage/' . $imagePath;
@@ -176,4 +180,69 @@ class HomeController extends Controller
 
         return redirect('project');
     }
+
+    public function detail(string $id){
+        $detail = DetailProject::where('project_id',$id)->get();
+        $project = Project::findOrFail($id);
+        return view('project.detail', compact('project','detail'));
+    }
+
+    public function createDetail(){
+        return view('project.detail');
+    }
+
+    public function storeDetail(Request $request){
+        $validator = Validator::make($request->all(), [
+            'image_gallery' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+        if ($validator->fails()) {
+            toastr()->error($validator->messages()->first());
+            return redirect()->back()->withInput();
+        } else {
+            // example 1
+            if ($request->hasFile('image_gallery')) {
+                $imagePath = $request->file('image_gallery')->store('uploads', 'public');
+            } else {
+                $imagePath = '';
+            }
+            $detail = new DetailProject();
+            $detail->project_id = $request->project_id;
+            $detail->image_gallery = '/storage/' . $imagePath;
+            $detail->save();
+            toastr()->success('Data Saved Successfully', 'Successful');
+            return redirect('project/'.$request->project_id.'/detail');
+        }
+    }
+
+    public function category(){
+        $category = Category::all();
+        return view('project.category', compact('category'));
+    }
+
+    public function createCategory(){
+        return view('project.category');
+    }
+
+    public function storeCategory(Request $request){
+        $validator = Validator::make($request->all(),[
+            'name' => 'required'
+        ]);
+        if($validator->fails()){
+            toastr()->error($validator->messages()->first());
+            return redirect()->back()->withInput();
+        } else{
+            $category = Category::where('name',$request->name)->first();
+            if ($category==null){
+                $category = Category::create([
+                    'name'=> $request->name
+                ]);
+                toastr()->success('Data Saved Successfully', 'Successful');
+                return redirect('project');
+            } else{
+                toastr()->warning('Category '.$request->nama_produk.' Alredy Exists', 'Warning', ['timeOut'=>5000]);
+                return redirect()->back()->withInput();
+            }
+        }
+    }
 }
+

@@ -27,6 +27,9 @@ Route::get('/project', [App\Http\Controllers\HomeController::class, 'data'])->na
 
 Route::get('project/create',[App\Http\Controllers\HomeController::class,'create']);
 Route::post('project/create',[App\Http\Controllers\HomeController::class,'store']);
+Route::post('detail/create',[App\Http\Controllers\HomeController::class,'storeDetail']);
+Route::get('project/{id}/detail', [App\Http\Controllers\HomeController::class,'detail'])->name('project.detail');
+Route::get('project/{id}/category',[App\Http\Controllers\HomeController::class,'category'])->name('project.category');
 Route::get('project/{id}/edit', [App\Http\Controllers\HomeController::class,'edit'])->name('project.edit');
 Route::put('project/{id}', [App\Http\Controllers\HomeController::class,'update'])->name('project.update');
 Route::delete('/project/{id}', [App\Http\Controllers\HomeController::class,'destroy'])->name('project.destroy');

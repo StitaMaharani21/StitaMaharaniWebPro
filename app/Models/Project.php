@@ -19,5 +19,9 @@ class Project extends Model
     //     'image_url' => 'Default image_url'
 
     // ];
+    public function user(){
+        return $this->belongsTo('app\Models\User');
+        return $this->belongsTo('app\Model\Category');
+    }
 
 }
